@@ -8,17 +8,7 @@ This is empty on purpose! Your code to build the resume will go here.
 // var funThoughts = awesomeThoughts.replace("AWESOME", "Fun");
 // console.log(funThoughts);
 // $("#main").append(funThoughts);
-var formattedName = HTMLheaderName.replace("%data%", "Daisy wu");
-var formattedRole = HTMLheaderRole.replace("%data%", "Web Developer");
-$("#header").prepend(formattedRole);
-$("#header").prepend(formattedName);
-function inName(name) {
-    name = name.split(" ");
-    console.log(name);
-    name[1] = name[1].toUpperCase();
-    name[0] = name[0].slice(0, 1).toUpperCase() + name[0].slice(1).toLowerCase();
-    return name[0] + " " + name[1];
-}
+
 $("#main").append(internationalizeButton);
 var work = {
     "jobs": [
@@ -28,7 +18,7 @@ var work = {
             "location": "苏州",
             "dates": "2014.8~2015.3",
             "description": "负责方正旗下几家公司的出纳日常工作，包括不限于日常网银及现金收付款、银行开销户、开具银承票据、报送资金日本/周报/月报、每月出具银行余额调节表、账实核对、固定资产盘点、折旧等工作。在此过程与各银行进行对接，有较强的沟通解决问题的能力",
-            "website": "http://www.pku-hit.com/"
+            "url": "http://www.pku-hit.com/"
         },
         {
             "employer": "方正国际软件有限公司",
@@ -36,7 +26,7 @@ var work = {
             "location": "苏州",
             "dates": "2015.3~2017.6",
             "description": "由上家公司内部调转至方正国际，职位是费用会计。日常工作包含但不限于日常出纳工作（资金调转、开销户、开具银承票据、报送资金报表、与银行对接等）、费用会计（审核公司员工报销单据发票、对日常费用进行审核）、税务专员（开具发票、每月进行报税、报送相关税务报表）、固定资产会计（折旧、盘点）",
-            "website": "http://www.founderinternational.com/"
+            "url": "http://www.founderinternational.com/"
         }
     ]
 }
@@ -47,7 +37,7 @@ var projects = {
             "dates": "2017.6~2018.1",
             "description": "学习前端入门的各个项目练习",
             "images": ["images/scenery-22.png", "images/scenery-1.png", "images/scenery-2.png", "images/scenery-24.png"],
-            "website": "https://coding.net/u/daisywu926/project"
+            "url": "https://coding.net/u/daisywu926/project"
         }
     ]
 }
@@ -71,7 +61,7 @@ var education = {
             "location": "开封",
             "degree": "bachelor",
             "dates": "2010.9~2014.6",
-            "website": "http://www.henu.edu.cn/",
+            "url": "http://www.henu.edu.cn/",
             "majors": ["Finance", "Monetary Science", "Accounting"
             ]
         }
@@ -81,32 +71,36 @@ var education = {
             "title": "web development",
             "school": "Udacity",
             "dates": "2017.6~2018.1",
-            "website": "https://cn.udacity.com/"
+            "url": "https://cn.udacity.com/"
         }
     ]
 }
 
 bio.display = function () {
+    var formattedName = HTMLheaderName.replace("%data%", "Daisy wu");
+    var formattedRole = HTMLheaderRole.replace("%data%", "Web Developer");
+    $("#header").prepend(formattedName, formattedRole);
+    function inName(name) {
+        name = name.split(" ");
+        console.log(name);
+        name[1] = name[1].toUpperCase();
+        name[0] = name[0].slice(0, 1).toUpperCase() + name[0].slice(1).toLowerCase();
+        return name[0] + " " + name[1];
+    }
     var formattedMobile = HTMLmobile.replace("%data%", bio.contacts.mobile);
-    $("#topContacts").append(formattedMobile);
     var formattedEmail = HTMLemail.replace("%data%", bio.contacts.email);
-    $("#topContacts").append(formattedEmail);
     var formattedGithub = HTMLgithub.replace("%data%", bio.contacts.github);
-    $("#topContacts").append(formattedGithub);
     var formattedLocation = HTMLlocation.replace("%data%", bio.contacts.location);
-    $("#topContacts").append(formattedLocation);
+    $("#topContacts, #footerContacts").append(formattedMobile, formattedEmail, formattedGithub, formattedLocation);
     var formattedBioPic = HTMLbioPic.replace("%data%", bio.biopic);
-    $("#header").append(formattedBioPic);
     var formattedWelcomeMsg = HTMLwelcomeMsg.replace("%data%", bio.welcomeMessage);
-    $("#header").append(formattedWelcomeMsg);
+    $("#header").append(formattedWelcomeMsg, formattedBioPic);
     if (bio.skills.length > 0) {
         $("#header").append(HTMLskillsStart);
-        var formattedSkills = HTMLskills.replace("%data%", bio.skills[0]);
-        $("#skills").append(formattedSkills);
-        formattedSkills = HTMLskills.replace("%data%", bio.skills[1]);
-        $("#skills").append(formattedSkills);
-        formattedSkills = HTMLskills.replace("%data%", bio.skills[2]);
-        $("#skills").append(formattedSkills);
+        bio.skills.forEach(function (skill) {
+            var formattedSkills = HTMLskills.replace("%data%", [skill]);
+            $("#skills").append(formattedSkills);
+        })
     }
 }
 bio.display();
@@ -116,14 +110,11 @@ work.display = function () {
         var formattedWorkEmployer = HTMLworkEmployer.replace("%data%", job.employer);
         var formattedWorkTitle = HTMLworkTitle.replace("%data%", job.title);
         var formattedWorkEmployerWorkTitle = formattedWorkEmployer + formattedWorkTitle;
-        $(".work-entry:last").append(formattedWorkEmployerWorkTitle);
         var formattedWorkLocation = HTMLworkDates.replace("%data%", job.location);
         formattedWorkDates = HTMLworkLocation.replace("%data%", job.dates);
         formattedWorkDescription = HTMLworkDescription.replace("%data%", job.description);
-        $(".work-entry:last").append(formattedWorkLocation);
-        $(".work-entry:last").append(formattedWorkDates);
-        $(".work-entry:last").append(formattedWorkDescription);
-        $(".work-entry:last").find("a").attr("href", job.website).attr("target", "_blank");
+        $(".work-entry:last").append(formattedWorkEmployerWorkTitle, formattedWorkLocation, formattedWorkDates, formattedWorkDescription);
+        $(".work-entry:last").find("a").attr("href", job.url).attr("target", "_blank");
     })
 }
 work.display();
@@ -131,12 +122,10 @@ projects.display = function () {
     projects.projects.forEach(function (project) {
         $("#projects").append(HTMLprojectStart);
         var formattedProjectTitle = HTMLprojectTitle.replace("%data%", project.title);
-        $(".project-entry:last").append(formattedProjectTitle);
         var formattedProjectDates = HTMLprojectDates.replace("%data%", project.dates);
-        $(".project-entry:last").append(formattedProjectDates);
         var formattedProjectDescription = HTMLprojectDescription.replace("%data%", project.description);
-        $(".project-entry:last").append(formattedProjectDescription);
-        $(".project-entry:last").find("a").attr("href", project.website).attr("target", "_blank");
+        $(".project-entry:last").append(formattedProjectTitle, formattedProjectDates, formattedProjectDescription);
+        $(".project-entry:last").find("a").attr("href", project.url).attr("target", "_blank");
         if (project.images.length > 0) {
             project.images.forEach(function (image) {
                 var formattedProjectImage = HTMLprojectImage.replace("%data%", [image]);
@@ -152,38 +141,25 @@ education.display = function () {
         var formattedSchoolName = HTMLschoolName.replace("%data%", school.name);
         var formattedSchoolDegree = HTMLschoolDegree.replace("%data%", school.degree);
         var formattedSchoolNameDegree = formattedSchoolName + formattedSchoolDegree;
-        $(".education-entry:last").append(formattedSchoolNameDegree);
         var formattedSchoolDates = HTMLschoolDates.replace("%data%", school.dates);
         formattedSchoolLocation = HTMLschoolLocation.replace("%data%", school.location);
         formattedSchoolMajor = HTMLschoolMajor.replace("%data%", school.majors);
-        $(".education-entry:last").append(formattedSchoolDates);
-        $(".education-entry:last").append(formattedSchoolLocation);
-        $(".education-entry:last").append(formattedSchoolMajor);
-        $(".education-entry").find("a").attr("href", school.website).attr("target", "_blank");
+        $(".education-entry:last").append(formattedSchoolNameDegree, formattedSchoolDates, formattedSchoolLocation, formattedSchoolMajor);
+        $(".education-entry").find("a").attr("href", school.url).attr("target", "_blank");
     })
     education.onlineCourses.forEach(function (onlineCourse) {
         $("#education").append(HTMLonlineClasses);
         var formattedOnlineTitle = HTMLonlineTitle.replace("%data%", onlineCourse.title);
         var formattedOnlineSchool = HTMLonlineSchool.replace("%data%", onlineCourse.school);
         var formattedOnlineTitleSchool = formattedOnlineTitle + formattedOnlineSchool;
-        $(".online-entry:last").append(formattedOnlineTitleSchool);
         var formattedOnlineDates = HTMLonlineDates.replace("%data%", onlineCourse.dates);
-        formattedOnlineURL = HTMLonlineURL.replace("%data%", onlineCourse.website);
-        $(".online-entry:last").append(formattedOnlineDates);
-        $(".online-entry:last").append(formattedOnlineURL);
-        $(".online-entry").find("a").attr("href", onlineCourse.website).attr("target", "_blank");
+        formattedOnlineURL = HTMLonlineURL.replace("%data%", onlineCourse.url);
+        $(".online-entry:last").append(formattedOnlineTitleSchool, formattedOnlineDates, formattedOnlineURL);
+        $(".online-entry").find("a").attr("href", onlineCourse.url).attr("target", "_blank");
     })
 }
 education.display();
 $("#mapDiv").append(googleMap);
-var formattedMobile = HTMLmobile.replace("%data%", bio.contacts.mobile);
-$("#footerContacts").append(formattedMobile);
-var formattedEmail = HTMLemail.replace("%data%", bio.contacts.email);
-$("#footerContacts").append(formattedEmail);
-var formattedGithub = HTMLgithub.replace("%data%", bio.contacts.github);
-$("#footerContacts").append(formattedGithub);
-var formattedLocation = HTMLlocation.replace("%data%", bio.contacts.location);
-$("#footerContacts").append(formattedLocation);
 // $("#main").append(bio.name);
 // bio.location = "suzhou";
 // $("#main").append(bio.location);
